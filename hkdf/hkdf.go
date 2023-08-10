@@ -32,6 +32,12 @@ func Extract(hash func() hash.Hash, secret, salt []byte) []byte {
 	return extractor.Sum(nil)
 }
 
+func ExtractWithHMAC(extractor hash.Hash, secret []byte) []byte {
+	extractor.Reset()
+	extractor.Write(secret)
+	return extractor.Sum(nil)
+}
+
 type hkdf struct {
 	expander hash.Hash
 	size     int
@@ -82,6 +88,11 @@ func (f *hkdf) Read(p []byte) (int, error) {
 // 3.3. Most common scenarios will want to use New instead.
 func Expand(hash func() hash.Hash, pseudorandomKey, info []byte) io.Reader {
 	expander := hmac.New(hash, pseudorandomKey)
+	return &hkdf{expander, expander.Size(), info, 1, nil, nil}
+}
+
+func ExpandWithHMAC(expander hash.Hash, info []byte) io.Reader {
+	expander.Reset()
 	return &hkdf{expander, expander.Size(), info, 1, nil, nil}
 }
 

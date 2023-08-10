@@ -1,4 +1,4 @@
-module golang.org/x/crypto
+module github.com/MitchellCanopus/crypto
 
 go 1.17
 
