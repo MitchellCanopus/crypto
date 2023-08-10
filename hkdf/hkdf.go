@@ -85,6 +85,10 @@ func Expand(hash func() hash.Hash, pseudorandomKey, info []byte) io.Reader {
 	return &hkdf{expander, expander.Size(), info, 1, nil, nil}
 }
 
+func ExpandWithHMAC(hmac hash.Hash, info []byte) io.Reader {
+	return &hkdf{hmac, expander.Size(), info, 1, nil, nil}
+}
+
 // New returns a Reader, from which keys can be read, using the given hash,
 // secret, salt and context info. Salt and info can be nil.
 func New(hash func() hash.Hash, secret, salt, info []byte) io.Reader {
